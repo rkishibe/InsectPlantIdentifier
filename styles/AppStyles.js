@@ -3,63 +3,76 @@ import { StyleSheet } from 'react-native';
 const AppStyles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 16,
+    backgroundColor: '#f0f4f7',
   },
   header: {
-    padding: 20,
-    backgroundColor: '#6200ee',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    marginVertical: 20,
   },
   headerTitle: {
-    fontSize: 28,
-    color: 'white',
-    textAlign: 'center',
+    fontSize: 24,
     fontWeight: 'bold',
+    color: '#2c6e49',
   },
-  content: {
-    padding: 20,
-    alignItems: 'center',
-  },
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#03dac5',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
+  searchBar: {
+    backgroundColor: '#fff',
+    padding: 10,
     borderRadius: 8,
-    marginTop: 20,
+    marginVertical: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
   },
-  icon: {
-    marginRight: 8,
+  recommendContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 10,
   },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  loading: {
-    marginTop: 30,
-  },
-  resultContainer: {
-    marginTop: 30,
+  recommendCard: {
+    backgroundColor: '#e2f0d9',
     padding: 20,
     borderRadius: 10,
-    backgroundColor: '#ffffff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    width: '90%',
+    alignItems: 'center',
+  },
+  recommendText: {
+    fontSize: 16,
+    color: '#2c6e49',
+  },
+  button: {
+    backgroundColor: '#2c6e49',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  resultContainer: {
+    marginTop: 20,
+    padding: 15,
+    backgroundColor: '#e2f0d9',
+    borderRadius: 8,
   },
   resultText: {
-    fontSize: 18,
+    fontSize: 16,
     color: '#333',
-    textAlign: 'center',
-    lineHeight: 25,
+  },
+  detailsContainer: {
+    marginVertical: 10,
+    padding: 15,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  detailsText: {
+    fontSize: 16,
+    color: '#333',
   },
 });
 

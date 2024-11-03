@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -7,24 +7,41 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ImageBackground,
 } from 'react-native';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {launchCamera} from 'react-native-image-picker'; // Add this for accessing the camera
-import {useColorScheme} from 'react-native';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { launchCamera, Asset } from 'react-native-image-picker';
+import { useColorScheme } from 'react-native';
 import axios from 'axios';
-import AppStyles from './styles/AppStyles';  // Import styles
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import AppStyles from './styles/AppStyles'; // Import styles
+import HomeScreen from './screens/HomeScreen';
+import IdentifyScreen from './screens/IdentifyScreen';
+import CheckoutScreen from './screens/CheckoutScreen';
+
+import { enableScreens } from 'react-native-screens';
+
+enableScreens();
+
+type RootStackParamList = {
+  Home: undefined;
+  Identify: undefined;
+  Checkout: undefined;
+};
+
+const Tab = createBottomTabNavigator<RootStackParamList>();
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
-
-  // State to store identification result
   const [identificationResult, setIdentificationResult] = useState<string | null>(null);
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  // Function to handle camera launch and upload image
   const openCamera = async () => {
     const result = await launchCamera({
       mediaType: 'photo',
@@ -34,13 +51,10 @@ function App(): React.JSX.Element {
 
     if (result.assets && result.assets.length > 0) {
       const image = result.assets[0];
-
-      // Send the image to the backend for processing
       uploadImageToServer(image);
     }
   };
 
-  // Function to upload image to server and get prediction result
   const uploadImageToServer = async (image: Asset) => {
     const formData = new FormData();
     formData.append('image', {
@@ -55,7 +69,6 @@ function App(): React.JSX.Element {
           'Content-Type': 'multipart/form-data',
         },
       });
-      // Assuming response includes plant and pest predictions
       const { plant_prediction, pest_prediction } = response.data;
       setIdentificationResult(
         `Plant Prediction: ${plant_prediction}\nPest Prediction: ${pest_prediction}`
@@ -67,32 +80,33 @@ function App(): React.JSX.Element {
   };
 
   return (
-    <SafeAreaView style={[styles.container, backgroundStyle]}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView contentInsetAdjustmentBehavior="automatic" style={backgroundStyle}>
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>Insect Identifier</Text>
-        </View>
-
-        <View style={styles.content}>
-          <TouchableOpacity style={styles.button} onPress={openCamera}>
-            <Text style={styles.buttonText}>Open Camera</Text>
-          </TouchableOpacity>
-
-          {identificationResult && (
-            <View style={styles.resultContainer}>
-              <Text style={styles.resultText}>{identificationResult}</Text>
-            </View>
-          )}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <NavigationContainer>
+      <StatusBar barStyle="dark-content" backgroundColor="#f0f4f7" />
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName: string;
+            if (route.name === 'Home') {
+              iconName = focused ? 'home' : 'home-outline';
+            } else if (route.name === 'Identify') {
+              iconName = focused ? 'camera' : 'camera-outline';
+            } else if (route.name === 'Checkout') {
+              iconName = focused ? 'cart' : 'cart-outline';
+            }
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: '#2c6e49',
+          tabBarInactiveTintColor: 'gray',
+          headerShown: false,
+          tabBarStyle: { backgroundColor: '#f0f4f7' },
+        })}
+      >
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Identify" component={IdentifyScreen} />
+        <Tab.Screen name="Checkout" component={CheckoutScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
-
-
 
 export default App;
