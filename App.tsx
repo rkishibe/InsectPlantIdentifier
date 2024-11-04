@@ -20,7 +20,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import AppStyles from './styles/AppStyles'; // Import styles
 import HomeScreen from './screens/HomeScreen';
 import IdentifyScreen from './screens/IdentifyScreen';
-import CheckoutScreen from './screens/CheckoutScreen';
+import ResultScreen from './screens/ResultScreen';
 
 import { enableScreens } from 'react-native-screens';
 
@@ -103,7 +103,7 @@ function App(): React.JSX.Element {
       >
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Identify" component={IdentifyScreen} />
-        <Tab.Screen name="Checkout" component={CheckoutScreen} />
+        <Tab.Screen name="Result" component={ResultScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );

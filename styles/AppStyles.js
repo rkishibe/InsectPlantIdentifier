@@ -28,16 +28,21 @@ const AppStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginVertical: 10,
+    flexWrap: 'wrap',
   },
   recommendCard: {
     backgroundColor: '#e2f0d9',
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
+    width: '45%', // Adjust width as necessary to allow for two cards per row
+    marginVertical: 5, // Add some vertical margin between cards
   },
   recommendText: {
     fontSize: 16,
     color: '#2c6e49',
+    textAlign: 'center', // Center the text within the card
+    flexWrap: 'wrap', // Ensure text can wrap
   },
   button: {
     backgroundColor: '#2c6e49',
