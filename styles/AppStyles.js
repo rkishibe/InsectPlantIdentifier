@@ -35,14 +35,15 @@ const AppStyles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
-    width: '45%', // Adjust width as necessary to allow for two cards per row
-    marginVertical: 5, // Add some vertical margin between cards
+    width: '45%',
+    marginVertical: 5,   // Vertical space between cards
+    marginHorizontal: 5, // Horizontal space between columns
   },
   recommendText: {
     fontSize: 16,
     color: '#2c6e49',
-    textAlign: 'center', // Center the text within the card
-    flexWrap: 'wrap', // Ensure text can wrap
+    textAlign: 'center',
+    flexWrap: 'wrap',
   },
   button: {
     backgroundColor: '#2c6e49',

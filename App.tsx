@@ -1,38 +1,85 @@
 import React, { useState } from 'react';
 import {
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  ImageBackground,
+  useColorScheme,
 } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { launchCamera, Asset } from 'react-native-image-picker';
-import { useColorScheme } from 'react-native';
 import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { enableScreens } from 'react-native-screens';
 
-import AppStyles from './styles/AppStyles'; // Import styles
+import AppStyles from './styles/AppStyles';
 import HomeScreen from './screens/HomeScreen';
 import IdentifyScreen from './screens/IdentifyScreen';
 import ResultScreen from './screens/ResultScreen';
-
-import { enableScreens } from 'react-native-screens';
+import DetailsScreen from './screens/DetailsScreen';
 
 enableScreens();
 
+// Define types for navigation
 type RootStackParamList = {
-  Home: undefined;
-  Identify: undefined;
-  Checkout: undefined;
+  HomeTab: undefined;
+  IdentifyTab: undefined;
+  ResultTab: undefined;
+  DetailsScreen: { selectedKeyword: string };
 };
 
+// Bottom Tab Navigator
 const Tab = createBottomTabNavigator<RootStackParamList>();
+
+// Stack Navigator for nested screens
+const Stack = createStackNavigator<RootStackParamList>();
+
+// Home Stack with DetailsScreen included
+function HomeStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="DetailsScreen"
+        component={DetailsScreen}
+        options={{ title: 'Details' }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+// Identify Stack with DetailsScreen included
+function IdentifyStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="IdentifyScreen" component={IdentifyScreen} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="DetailsScreen"
+        component={DetailsScreen}
+        options={{ title: 'Details' }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+// Result Stack with DetailsScreen included
+function ResultStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="ResultScreen" component={ResultScreen} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="DetailsScreen"
+        component={DetailsScreen}
+        options={{ title: 'Details' }}
+      />
+    </Stack.Navigator>
+  );
+}
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -42,6 +89,7 @@ function App(): React.JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  // Open camera to take a photo
   const openCamera = async () => {
     const result = await launchCamera({
       mediaType: 'photo',
@@ -55,6 +103,7 @@ function App(): React.JSX.Element {
     }
   };
 
+  // Upload image to server and get predictions
   const uploadImageToServer = async (image: Asset) => {
     const formData = new FormData();
     formData.append('image', {
@@ -64,7 +113,7 @@ function App(): React.JSX.Element {
     });
 
     try {
-      const response = await axios.post('http://10.0.2.2:5000/predict', formData, {
+      const response = await axios.post('http://192.168.1.130:5000/predict', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -86,11 +135,11 @@ function App(): React.JSX.Element {
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName: string;
-            if (route.name === 'Home') {
+            if (route.name === 'HomeTab') {
               iconName = focused ? 'home' : 'home-outline';
-            } else if (route.name === 'Identify') {
+            } else if (route.name === 'IdentifyTab') {
               iconName = focused ? 'camera' : 'camera-outline';
-            } else if (route.name === 'Checkout') {
+            } else if (route.name === 'ResultTab') {
               iconName = focused ? 'cart' : 'cart-outline';
             }
             return <Ionicons name={iconName} size={size} color={color} />;
@@ -101,9 +150,9 @@ function App(): React.JSX.Element {
           tabBarStyle: { backgroundColor: '#f0f4f7' },
         })}
       >
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Identify" component={IdentifyScreen} />
-        <Tab.Screen name="Result" component={ResultScreen} />
+        <Tab.Screen name="HomeTab" component={HomeStack} options={{ title: 'Home' }} />
+        <Tab.Screen name="IdentifyTab" component={IdentifyStack} options={{ title: 'Identify' }} />
+{/* <Tab.Screen name="ResultTab" component={ResultStack} options={{ title: 'Result' }} /> */}
       </Tab.Navigator>
     </NavigationContainer>
   );
