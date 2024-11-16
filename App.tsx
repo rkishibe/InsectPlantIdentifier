@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, createContext, useContext } from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -9,8 +9,6 @@ import {
   useColorScheme,
 } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import { launchCamera, Asset } from 'react-native-image-picker';
-import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -29,12 +27,15 @@ enableScreens();
 type RootStackParamList = {
   HomeTab: undefined;
   IdentifyTab: undefined;
-  ResultTab: undefined;
+  ResultTab: undefined; // Ensure this is here for ResultStack
   DetailsScreen: { selectedKeyword: string };
 };
 
 // Bottom Tab Navigator
 const Tab = createBottomTabNavigator<RootStackParamList>();
+
+export const PredictionContext = createContext(null);
+export const usePrediction = () => useContext(PredictionContext);
 
 // Stack Navigator for nested screens
 const Stack = createStackNavigator<RootStackParamList>();
@@ -71,7 +72,12 @@ function IdentifyStack() {
 function ResultStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="ResultScreen" component={ResultScreen} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="ResultScreen"
+        component={ResultScreen}
+        options={{ headerShown: false }}
+        initialParams={{ plant_prediction: '', pest_prediction: '' }} // Default params
+      />
       <Stack.Screen
         name="DetailsScreen"
         component={DetailsScreen}
@@ -81,51 +87,12 @@ function ResultStack() {
   );
 }
 
+
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
-  const [identificationResult, setIdentificationResult] = useState<string | null>(null);
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  // Open camera to take a photo
-  const openCamera = async () => {
-    const result = await launchCamera({
-      mediaType: 'photo',
-      includeBase64: true,
-      saveToPhotos: false,
-    });
-
-    if (result.assets && result.assets.length > 0) {
-      const image = result.assets[0];
-      uploadImageToServer(image);
-    }
-  };
-
-  // Upload image to server and get predictions
-  const uploadImageToServer = async (image: Asset) => {
-    const formData = new FormData();
-    formData.append('image', {
-      uri: image.uri,
-      type: image.type,
-      name: image.fileName || 'photo.jpg',
-    });
-
-    try {
-      const response = await axios.post('http://192.168.1.130:5000/predict', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      const { plant_prediction, pest_prediction } = response.data;
-      setIdentificationResult(
-        `Plant Prediction: ${plant_prediction}\nPest Prediction: ${pest_prediction}`
-      );
-    } catch (error) {
-      console.error("Error uploading image or retrieving prediction:", error);
-      setIdentificationResult("Error processing image. Please try again.");
-    }
   };
 
   return (
@@ -152,7 +119,7 @@ function App(): React.JSX.Element {
       >
         <Tab.Screen name="HomeTab" component={HomeStack} options={{ title: 'Home' }} />
         <Tab.Screen name="IdentifyTab" component={IdentifyStack} options={{ title: 'Identify' }} />
-{/* <Tab.Screen name="ResultTab" component={ResultStack} options={{ title: 'Result' }} /> */}
+        <Tab.Screen name="ResultTab" component={ResultStack} options={{ title: 'Result' }} />
       </Tab.Navigator>
     </NavigationContainer>
   );

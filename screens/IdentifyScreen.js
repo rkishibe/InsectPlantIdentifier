@@ -1,24 +1,53 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { launchCamera } from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import AppStyles from '../styles/AppStyles';
 import axios from 'axios';
+
 
 export default function IdentifyScreen({ navigation }) {
   const [identificationResult, setIdentificationResult] = useState(null);
 
   const openCamera = async () => {
-    const result = await launchCamera({
-      mediaType: 'photo',
-      includeBase64: true,
-      saveToPhotos: false,
-    });
-
-    if (result.assets && result.assets.length > 0) {
-      const image = result.assets[0];
-      uploadImageToServer(image);
-    }
+    launchCamera(
+      {
+        mediaType: 'photo',
+        saveToPhotos: true,
+      },
+      (response) => {
+        if (response.didCancel) {
+          console.log('User cancelled camera picker');
+        } else if (response.errorCode) {
+          console.error('Error with camera:', response.errorMessage);
+        } else if (response.assets && response.assets.length > 0) {
+          const image =response.assets[0];
+          uploadImageToServer(image);
+        }
+      }
+    );
   };
+
+
+  const openGallery = () => {
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+      },
+      (response) => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.errorCode) {
+          console.error('Error with image picker:', response.errorMessage);
+        } else if (response.assets && response.assets.length > 0) {
+          const image =response.assets[0];
+          uploadImageToServer(image);
+        }
+      }
+    );
+  };
+
+//const testImg="./server/images/a.jpg";
+//
 
   const uploadImageToServer = async (image) => {
     const formData = new FormData();
@@ -29,30 +58,33 @@ export default function IdentifyScreen({ navigation }) {
     });
 
     try {
-      const response = await axios.post('http://10.0.2.2:5000/predict', formData, {
+      const response = await axios.post('http://192.168.1.131:5000/predict', formData, { //http://10.0.2.2:5000/predict
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      const { plant_prediction, pest_prediction } = response.data;
 
-      const result = {
-        name: plant_prediction,
-        pest: pest_prediction,
-      };
+      plant_prediction=response.data['plant'];
+      pest_prediction=response.data['pest'];
 
-      setIdentificationResult(result);
-      navigation.navigate('Checkout', { result });
+      // Navigate to ResultScreen with prediction results as parameters
+      navigation.navigate('ResultTab',{
+      screen: 'ResultScreen',
+      params:{
+              plant_prediction: plant_prediction,
+              pest_prediction: pest_prediction,
+      },
+
+      });
     } catch (error) {
       console.error("Error uploading image or retrieving prediction:", error);
-      setIdentificationResult({ name: "Error", pest: "Unable to process image." });
+      setIdentificationResult("Error processing image. Please try again.");
     }
   };
 
   return (
     <View style={[AppStyles.container, styles.container]}>
       <Text style={AppStyles.headerTitle}>Let's find out if your plant is healthy!</Text>
-
       <Text style={styles.instructions}>
         To check your plant's health, please follow these steps:
       </Text>
@@ -61,15 +93,14 @@ export default function IdentifyScreen({ navigation }) {
       <Text style={styles.instructionStep}>3. Capture a clear image of the entire leaf.</Text>
 
       <TouchableOpacity style={[AppStyles.button, styles.centerButton]} onPress={openCamera}>
+
         <Text style={AppStyles.buttonText}>Open Camera</Text>
       </TouchableOpacity>
 
-      {identificationResult && (
-        <View style={AppStyles.resultContainer}>
-          <Text style={AppStyles.resultText}>{identificationResult.name}</Text>
-          <Text style={AppStyles.resultText}>{identificationResult.pest}</Text>
-        </View>
-      )}
+      <TouchableOpacity style={[AppStyles.button, styles.centerButton]} onPress={openGallery}>
+      <Text style={AppStyles.buttonText}>Pick from Gallery</Text>
+      </TouchableOpacity>
+
     </View>
   );
 }

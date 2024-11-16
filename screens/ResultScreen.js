@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList,Image } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import AppStyles from '../styles/AppStyles';
 
+export default function ResultScreen({ route }) {
 const data = [
   {
     id: '1',
@@ -179,7 +180,7 @@ const data = [
   },
   {
     id: '30',
-    title: 'Caterpillar',
+    title: 'Catterpillar',
     description: 'Larvae of moths that can devour leaves quickly. Management: Handpick, use Bacillus thuringiensis (Bt), or apply insecticides.',
     image: 'https://example.com/image30.jpg', // Replace with actual image URLs
   },
@@ -233,34 +234,58 @@ const data = [
   },
 ];
 
+  const { plant_prediction, pest_prediction } = route.params || {};
 
-export default function CheckoutScreen({ route }) {
-  const { result } = route.params;
+  plant_prediction_processed = plant_prediction.replaceAll("_", "").trim().toLowerCase();
+  pest_prediction_processed =pest_prediction.trim().toLowerCase();
+
+console.log("route params in result", plant_prediction, pest_prediction);
+
+
   const [selectedDisease, setSelectedDisease] = useState(null);
   const [selectedPest, setSelectedPest] = useState(null);
 
   useEffect(() => {
-    if (result && result.name) {
-      // Find the disease based on plant prediction (result.name)
-      const diseaseMatch = data.find(
-        (item) => item.title && item.title.toLowerCase() === result.name.toLowerCase()
-      );
-     }
-    else if (result && result.pest){
-    // Find the pest based on pest prediction (result.pest)
-          const pestMatch = data.find(
-            (item) => item.title && item.title.toLowerCase() === result.pest.toLowerCase()
-          );
-    }
-//    else{
-//          setSelectedPest(pestMatch || { title: 'Unknown Pest', description: 'No pest control tips available.', image: '' });
-//    }
+  const formattedData = data.map((item) => ({
+      ...item,
+      title: item.title.replaceAll(" ", "").trim().toLowerCase(),
+    }));
 
-      //setSelectedDisease(diseaseMatch || { title: 'Unknown Disease', description: 'No disease care tips available.', image: '' });
-      setSelectedDisease({ title: 'Unknown Disease', description: 'No disease care tips available.', image: '' });
-      setSelectedPest({ title: 'Unknown Pest', description: 'No pest control tips available.', image: '' });
+    // Find the disease based on plant prediction
+  if (plant_prediction_processed?.includes("healthy")) {
+    console.log("Plant prediction contains 'healthy'. Setting to 'Healthy Plant'.");
+    setSelectedDisease({
+      title: 'Healthy Plant',
+      description: 'This plant is healthy and requires regular care to maintain its good condition.',
+      image: 'https://example.com/healthy-plant.jpg', // Replace with an actual image URL
+    });
+    //setSelectedPest(null); // Optionally clear pest information if plant is healthy
+    return; // Exit early since we already handled the case
+  }
 
-  }, [result]);
+  // Matching Logic
+  const diseaseMatch = formattedData.find((item) => {
+    console.log("Matching disease with:", item.title, "vs", plant_prediction_processed);
+    return item.title.includes(plant_prediction_processed || '');
+  });
+
+  console.log("Disease Match:", diseaseMatch);
+
+  const pestMatch = formattedData.find((item) => {
+    console.log("Matching pest with:", item.title, "vs", pest_prediction_processed);
+    return item.title.includes(pest_prediction_processed || '');
+  });
+
+  console.log("Pest Match:", pestMatch);
+
+    // Set matched disease and pest, or default to unknown entries
+    setSelectedDisease(
+      diseaseMatch || { title: 'Unknown Disease', description: 'No disease care tips available.', image: '' }
+    );
+    setSelectedPest(
+      pestMatch || { title: 'Unknown Pest', description: 'No pest control tips available.', image: '' }
+    );
+  }, [plant_prediction, pest_prediction]);
 
   return (
     <View style={AppStyles.container}>
