@@ -57,8 +57,8 @@ export default function IdentifyScreen({ navigation }) {
       name: image.fileName || 'photo.jpg',
     });
 
-    try {
-      const response = await axios.post('http://192.168.1.131:5000/predict', formData, { //http://10.0.2.2:5000/predict
+    try { //http://192.168.1.131:5000/predict
+      const response = await axios.post('http://10.0.2.2:5000/predict', formData, { //http://10.0.2.2:5000/predict
         headers: {
           'Content-Type': 'multipart/form-data',
         },

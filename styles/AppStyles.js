@@ -76,6 +76,15 @@ const AppStyles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 3,
   },
+  image: {
+    width: 400,
+    height: 200,
+    resizeMode: 'contain',
+  },
+   detailsTitle: {
+      fontSize: 20,
+      color: '#000',
+    },
   detailsText: {
     fontSize: 16,
     color: '#333',

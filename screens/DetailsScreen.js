@@ -1,29 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image,StyleSheet  } from 'react-native';
 import AppStyles from '../styles/AppStyles';
 
 const data = [
   {
     id: '1',
-    title: 'Apple Cedar Apple Rust',
+    title: 'Apple Cedar Rust',
     description: 'A fungal disease affecting apple trees, causing yellow-orange spots on leaves and fruit. Management: Remove infected leaves and fruits, maintain good air circulation, and apply fungicides in early spring.',
-    image: 'https://example.com/image1.jpg', // Replace with actual image URLs
+    image: 'https://www.missouribotanicalgarden.org/Portals/0/Kemper%20Gardens/Pest%20Images/Diseases/Cedar%20Apple%20Rust/Cedar%20apple%20rust%20(DM)%20(11).JPG?ver=nAW8wtE9qhwxaMIZjAM5pA%3D%3D',
   },
   {
     id: '2',
-    title: 'Tomato Tomato Yellow Leaf Curl Virus',
+    title: 'Tomato Yellow Leaf Curl Virus',
     description: 'A viral infection causing yellowing and curling of tomato leaves, often transmitted by whiteflies. Management: Remove and destroy infected plants, control whitefly populations, and use resistant tomato varieties.',
     image: 'https://example.com/image2.jpg', // Replace with actual image URLs
   },
   {
     id: '3',
-    title: 'Corn (maize) Northern Leaf Blight',
+    title: 'Corn Northern Leaf Blight',
     description: 'A fungal disease that causes long, gray-green lesions on corn leaves. Management: Rotate crops, plant resistant hybrids, and remove debris after harvest to reduce overwintering spores.',
     image: 'https://example.com/image3.jpg', // Replace with actual image URLs
   },
   {
     id: '4',
-    title: 'Orange Huanglongbing (Citrus greening)',
+    title: 'Orange Huanglongbing',
     description: 'A severe bacterial disease that causes yellowing of leaves and fruit drop in citrus trees. Management: Remove infected trees, control the insect vectors (e.g., Asian citrus psyllid), and practice good sanitation.',
     image: 'https://example.com/image4.jpg', // Replace with actual image URLs
   },
@@ -47,7 +47,7 @@ const data = [
   },
   {
     id: '8',
-    title: 'Grape Leaf Blight (Isariopsis Leaf Spot)',
+    title: 'Grape Leaf Blight',
     description: 'A fungal disease causing dark spots on grape leaves, potentially leading to leaf drop. Management: Remove infected leaves, avoid wetting foliage, and apply fungicides.',
     image: 'https://example.com/image8.jpg', // Replace with actual image URLs
   },
@@ -59,7 +59,7 @@ const data = [
   },
   {
     id: '10',
-    title: 'Corn (maize) Cercospora Leaf Spot (Gray Leaf Spot)',
+    title: 'Corn Cercospora Leaf Spot',
     description: 'A fungal disease producing gray spots on corn leaves, which can lead to yield loss. Management: Rotate crops, use resistant varieties, and apply fungicides as needed.',
     image: 'https://example.com/image10.jpg', // Replace with actual image URLs
   },
@@ -71,7 +71,7 @@ const data = [
   },
   {
     id: '12',
-    title: 'Tomato Spider Mites (Two-Spotted Spider Mite)',
+    title: 'Tomato Spider Mites',
     description: 'Tiny pests that cause stippling on leaves and may produce webbing. Management: Increase humidity, wash plants with water, and apply miticides as necessary.',
     image: 'https://example.com/image12.jpg', // Replace with actual image URLs
   },
@@ -101,13 +101,13 @@ const data = [
   },
   {
     id: '17',
-    title: 'Apple Apple Scab',
+    title: 'Apple Scab',
     description: 'A fungal disease leading to dark, olive-green spots on leaves and fruit. Management: Prune trees for airflow, apply fungicides in spring, and remove fallen leaves.',
     image: 'https://example.com/image17.jpg', // Replace with actual image URLs
   },
   {
     id: '18',
-    title: 'Corn (maize) Common Rust',
+    title: 'Corn Common Rust',
     description: 'A fungal disease with reddish-brown pustules on leaves. Management: Use resistant varieties and apply fungicides if necessary.',
     image: 'https://example.com/image18.jpg', // Replace with actual image URLs
   },
@@ -137,25 +137,25 @@ const data = [
   },
   {
     id: '23',
-    title: 'Grape Esca (Black Measles)',
+    title: 'Grape Esca',
     description: 'A fungal disease affecting grapevines, leading to leaf and fruit decline. Management: Prune affected vines and manage vine health to reduce stress.',
     image: 'https://example.com/image23.jpg', // Replace with actual image URLs
   },
   {
     id: '24',
-    title: 'Cherry (including sour) Powdery Mildew',
+    title: 'Cherry Powdery Mildew',
     description: 'A fungal infection causing white powdery spots on leaves. Management: Prune for airflow, avoid overhead watering, and apply fungicides.',
     image: 'https://example.com/image24.jpg', // Replace with actual image URLs
   },
   {
     id: '25',
-    title: 'Tomato Tomato Mosaic Virus',
+    title: 'Tomato Mosaic Virus',
     description: 'A viral infection causing mottled leaves and stunted growth in tomatoes. Management: Remove infected plants and control aphid populations.',
     image: 'https://example.com/image25.jpg', // Replace with actual image URLs
   },
   {
     id: '26',
-    title: 'Pepper, Bell Bacterial Spot',
+    title: 'Pepper Bell Bacterial Spot',
     description: 'A bacterial disease causing dark spots on leaves and fruit in bell peppers. Management: Use disease-free seeds, rotate crops, and apply copper-based bactericides.',
     image: 'https://example.com/image26.jpg', // Replace with actual image URLs
   },
@@ -244,16 +244,18 @@ export default function DetailsScreen({ route }) {
   }, [selectedKeyword]);
 
   return (
-    <View style={AppStyles.container}>
+    <View style={[AppStyles.container, styles.container]}>
       {selectedItem ? (
         <>
           <Text style={AppStyles.detailsTitle}>{selectedItem.title}</Text>
-          <Text style={AppStyles.detailsText}>{selectedItem.description}</Text>
-          {selectedItem.image ? (
-            <Image source={{ uri: selectedItem.image }} style={AppStyles.image} />
-          ) : (
-            <Text style={AppStyles.detailsText}>Image not available</Text>
-          )}
+          <View style={styles.row}>
+            {selectedItem.image ? (
+               <Image source={{ uri: selectedItem.image }} style={styles.image} />
+            ) : (
+              <Text style={styles.text}>Image not available</Text>
+            )}
+            <Text style={[AppStyles.detailsText, styles.text]}>{selectedItem.description}</Text>
+          </View>
         </>
       ) : (
         <Text style={AppStyles.detailsText}>Loading...</Text>
@@ -261,3 +263,27 @@ export default function DetailsScreen({ route }) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'flex-start', // Align image and text at the top
+    marginVertical: 16,
+  },
+  image: {
+    width: 200,
+    height: 200,
+    marginRight: 16,
+    borderRadius: 8, // Optional: round the corners
+  },
+  text: {
+    flex: 1, // Occupy remaining space
+    flexShrink: 1, // Allow text to wrap
+    fontSize: 16,
+    lineHeight: 24,
+  },
+});

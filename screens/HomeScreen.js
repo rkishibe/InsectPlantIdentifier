@@ -4,13 +4,13 @@ import AppStyles from '../styles/AppStyles';
 
 export default function HomeScreen({ navigation }) {
   const keywords = [
-    'Apple Cedar apple rust', 'Tomato Yellow Leaf Curl Virus', 'Corn Northern Leaf Blight',
-    'Orange Huanglongbing', 'Potato Early blight', 'Tomato Bacterial spot', 'Tomato Leaf Mold',
-    'Grape Leaf blight', 'Tomato Early blight', 'Corn Cercospora Gray leaf spot',
-    'Peach Bacterial spot', 'Tomato Spider mites Two-spotted spider mite', 'Grape Black rot', 'Potato Late blight',
-    'Tomato Late blight', 'Strawberry Leaf scorch', 'Apple Apple scab', 'Corn Common rust', 'Squash Powdery mildew',
-    'Tomato Septoria leaf spot', 'Apple Black rot', 'Tomato Target Spot', 'Grape Esca',
-    'Cherry Powdery mildew', 'Tomato Tomato mosaic virus', 'Pepper, bell Bacterial spot', 'Ants',
+    'Apple Cedar Rust', 'Tomato Yellow Leaf Curl Virus', 'Corn Northern Leaf Blight',
+    'Orange Huanglongbing', 'Potato Early Blight', 'Tomato Bacterial Spot', 'Tomato Leaf Mold',
+    'Grape Leaf Blight', 'Tomato Early Blight', 'Corn Cercospora Gray Leaf Spot',
+    'Peach Bacterial Spot', 'Tomato Spider mites', 'Grape Black Rot', 'Potato Late Blight',
+    'Tomato Late Blight', 'Strawberry Leaf Scorch', 'Apple Scab', 'Corn Common Rust', 'Squash Powdery mildew',
+    'Tomato Septoria Leaf Spot', 'Apple Black Rot', 'Tomato Target Spot', 'Grape Esca',
+    'Cherry Powdery Mildew', 'Tomato Mosaic Virus', 'Pepper Bell Bacterial spot', 'Ants',
     'Bees', 'Beetle', 'Catterpillar', 'Earthworms', 'Earwig', 'Grasshopper', 'Moth', 'Slug', 'Snail', 'Wasp', 'Weevil',
   ];
 

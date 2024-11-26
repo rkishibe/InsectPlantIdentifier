@@ -259,21 +259,21 @@ console.log("route params in result", plant_prediction, pest_prediction);
       description: 'This plant is healthy and requires regular care to maintain its good condition.',
       image: 'https://example.com/healthy-plant.jpg', // Replace with an actual image URL
     });
-    //setSelectedPest(null); // Optionally clear pest information if plant is healthy
+    setSelectedPest(null); // Optionally clear pest information if plant is healthy
     return; // Exit early since we already handled the case
   }
 
   // Matching Logic
   const diseaseMatch = formattedData.find((item) => {
-    console.log("Matching disease with:", item.title, "vs", plant_prediction_processed);
-    return item.title.includes(plant_prediction_processed || '');
+    console.log("Matching disease with:", item.title, "vs", plant_prediction);
+    return item.title.includes(plant_prediction || '');
   });
 
   console.log("Disease Match:", diseaseMatch);
 
   const pestMatch = formattedData.find((item) => {
-    console.log("Matching pest with:", item.title, "vs", pest_prediction_processed);
-    return item.title.includes(pest_prediction_processed || '');
+    console.log("Matching pest with:", item.title, "vs", pest_prediction);
+    return item.title.includes(pest_prediction || '');
   });
 
   console.log("Pest Match:", pestMatch);
@@ -286,6 +286,19 @@ console.log("route params in result", plant_prediction, pest_prediction);
       pestMatch || { title: 'Unknown Pest', description: 'No pest control tips available.', image: '' }
     );
   }, [plant_prediction, pest_prediction]);
+
+if (!plant_prediction && !pest_prediction) {
+  return (
+    <View style={[AppStyles.container, { justifyContent: 'center', alignItems: 'center', padding: 20 }]}>
+      <Text style={[AppStyles.headerTitle, { fontSize: 24, marginBottom: 20 }]}>
+        Detailed Care Tips
+      </Text>
+      <Text style={[AppStyles.detailsText, { fontSize: 18, textAlign: 'center', lineHeight: 25 }]}>
+        No predictions available. Please go to the **Identify** page to start identifying plants and pests.
+      </Text>
+    </View>
+  );
+}
 
   return (
     <View style={AppStyles.container}>
